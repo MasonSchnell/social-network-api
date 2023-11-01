@@ -2,6 +2,8 @@ const router = require("express").Router();
 
 const User = require("../models/User");
 
+const { isAuthenticated } = require("./helpers");
+
 // Get All users
 router.get("/user", async (req, res) => {
   const user = await User.find();
