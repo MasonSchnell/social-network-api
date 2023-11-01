@@ -22,12 +22,12 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: {
-      // Cause the cookie to expire in 3 minutes
-      maxAge: 3 * 60 * 1000,
-      // Do not allow cookies to be accessed through client side JS
-      httpOnly: true,
-    },
+    // cookie: {
+    //   // Cause the cookie to expire in 3 minutes
+    //   maxAge: 3 * 60 * 1000,
+    //   // Do not allow cookies to be accessed through client side JS
+    //   httpOnly: true,
+    // },
   })
 );
 

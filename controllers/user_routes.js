@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const User = require("../models/User");
+const Reaction = require("../models/Reaction");
 
 const { isAuthenticated } = require("./helpers");
 
@@ -70,6 +71,23 @@ router.delete("/user/:user_id", async (req, res) => {
     res.status(200).json({ message: "Shop deleted successfully" });
   } catch (error) {
     res.status(500).send({ error: error.message });
+  }
+});
+
+// Add Friend
+router.post("/user/:user_id/friends/:friend_id", async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+
+    const friend_id = req.params.friend_id;
+
+    const friend = await User.findById(friend_id);
+
+    await User.findByIdAndUpdate(user_id, { $push: { friends: friend } });
+
+    res.json("Friend Added");
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 });
 

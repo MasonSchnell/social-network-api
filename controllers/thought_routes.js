@@ -2,6 +2,7 @@ const router = require("express").Router();
 
 const Thought = require("../models/Thought");
 const User = require("../models/User");
+const reactionSchema = require("../models/Reaction");
 
 const { isAuthenticated, isLoggedIn } = require("./helpers");
 
@@ -38,6 +39,29 @@ router.get("/thought/:thought_id", async (req, res) => {
   const user = await Thought.findById(thought_id);
 
   res.json(user);
+});
+
+// Add Reaction
+router.post("/thoughts/:thought_id/reactions", async (req, res) => {
+  try {
+    const thought_id = req.params.thought_id;
+    const user_id = req.session.user_id;
+
+    const user = await User.findById(user_id);
+
+    const reaction = {
+      reactionBody: req.body.reactionBody,
+      username: user.username,
+    };
+
+    await Thought.findByIdAndUpdate(thought_id, {
+      $push: { reactions: reaction },
+    });
+
+    res.json("Reaction Added");
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 });
 
 // Create thought

@@ -1,4 +1,5 @@
 const { model, Schema } = require("mongoose");
+const reactionSchema = require("./Reaction");
 
 const thoughtSchema = new Schema({
   thoughtText: {
@@ -15,6 +16,7 @@ const thoughtSchema = new Schema({
     type: String,
     required: true,
   },
+  reactions: [reactionSchema],
   formattedCreatedAt: {
     type: String,
     get: function () {
