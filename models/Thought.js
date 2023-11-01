@@ -1,5 +1,6 @@
 const { model, Schema } = require("mongoose");
 const reactionSchema = require("./Reaction");
+const { format } = require("date-fns");
 
 const thoughtSchema = new Schema({
   thoughtText: {
@@ -10,19 +11,17 @@ const thoughtSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: new Date(format(new Date(), "MM/dd/yyyy")),
   },
   username: {
     type: String,
     required: true,
   },
   reactions: [reactionSchema],
-  formattedCreatedAt: {
-    type: String,
-    get: function () {
-      return new Date(this.createdAt).toLocaleString();
-    },
-  },
+});
+
+thoughtSchema.virtual("formattedCreatedAt").get(function () {
+  return format(this.createdAt, "yyyy-MM-dd HH:mm:ss");
 });
 
 const Thought = model("Thought", thoughtSchema);
