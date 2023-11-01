@@ -3,8 +3,6 @@ const router = require("express").Router();
 const User = require("../models/User");
 const Reaction = require("../models/Reaction");
 
-const { isAuthenticated } = require("./helpers");
-
 // Get All users
 router.get("/user", async (req, res) => {
   const user = await User.find().populate("thoughts").populate("friends");

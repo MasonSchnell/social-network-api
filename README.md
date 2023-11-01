@@ -1,6 +1,7 @@
 # Social Network API
 
 This Social Network API will help developers easily use implemented routes for Users, Posts(Thoughts), and Comments(Reactions) to develop their own application.
+[Video Demonstration](https://watch.screencastify.com/v/X7rXPzDoFIkNcFqPJO0I)
 
 ## Features
 
@@ -24,7 +25,7 @@ This Social Network API will help developers easily use implemented routes for U
 
 ### Prerequisites
 
-- Node.js 
+- Node.js
 - MongoDB database
 - npm
 
@@ -33,21 +34,22 @@ This Social Network API will help developers easily use implemented routes for U
 1. Clone the repository
 2. Open your terminal to social-network-api.
 3. Type the following code into the terminal to install dependencies:
+
 -       npm install
+
 4.  Create an env file and put in your own SESSION_SECRET key.
-5. Type the following code into the terminal to use the routes:
+5.  Type the following code into the terminal to use the routes:
+
 -       npm run dev
-
-
 
 ## Contact Information
 
--   Email: masonschnell1@gmail.com
--   GitHub: [MasonSchnell](https://github.com/MasonSchnell)
+- Email: masonschnell1@gmail.com
+- GitHub: [MasonSchnell](https://github.com/MasonSchnell)
 
 ## Acknowledgments
 
--   Rutgers Full Stack Development Team
+- Rutgers Full Stack Development Team
 
 ## License
 
