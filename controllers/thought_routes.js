@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const Thought = require("../models/Thought");
 const User = require("../models/User");
-const reactionSchema = require("../models/Reaction");
+const { format } = require("date-fns");
 
 const { isAuthenticated, isLoggedIn } = require("./helpers");
 
@@ -13,7 +13,7 @@ router.get("/thought", async (req, res) => {
   res.json(thought);
 });
 
-// Update a User
+// Update a thought
 router.put("/thought/edit", async (req, res) => {
   const { thought_id, thoughtText } = req.body;
 
@@ -64,6 +64,22 @@ router.post("/thoughts/:thought_id/reactions", async (req, res) => {
   }
 });
 
+// Remove Reaction
+router.delete("/thoughts/:thought_id/reactions", async (req, res) => {
+  try {
+    const thought_id = req.params.thought_id;
+    const reaction_id = req.body.reaction_id;
+
+    await Thought.findByIdAndUpdate(thought_id, {
+      $pull: { reactions: { _id: reaction_id } },
+    });
+
+    res.json("Reaction Removed");
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+});
+
 // Create thought
 router.post("/thought", async (req, res) => {
   try {
@@ -77,12 +93,15 @@ router.post("/thought", async (req, res) => {
     };
 
     const thought = await Thought.create(thoughtData);
+    const date = thought.formattedCreatedAt;
+    const formDate = new Date(date);
+    thought.createdAt = formDate;
+    await thought.save();
 
     await User.findByIdAndUpdate(user_id, { $push: { thoughts: thought._id } });
 
     res.json(thought);
   } catch (err) {
-    console.log("here");
     res.status(500).send({ message: err.message });
   }
 });
@@ -91,9 +110,8 @@ router.post("/thought", async (req, res) => {
 router.delete("/thought/:thought_id", async (req, res) => {
   try {
     const thought_id = req.params.thought_id;
-    console.log(thought_id);
+
     const thought = await Thought.findByIdAndDelete(thought_id);
-    console.log(thought);
 
     if (!thought) {
       return res.status(404).json({ error: "No thought found with this ID" });

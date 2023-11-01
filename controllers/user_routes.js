@@ -7,7 +7,7 @@ const { isAuthenticated } = require("./helpers");
 
 // Get All users
 router.get("/user", async (req, res) => {
-  const user = await User.find();
+  const user = await User.find().populate("thoughts").populate("friends");
 
   res.json(user);
 });
@@ -27,7 +27,6 @@ router.put("/user/edit", async (req, res) => {
 
     res.json(updated_user);
   } catch (err) {
-    console.log("HEHEH");
     res.status(500).send({ error: err.message });
   }
 });
@@ -48,12 +47,10 @@ router.post("/user", async (req, res) => {
   try {
     const user = await User.create(req.body);
 
-    console.log(user._id);
     req.session.user_id = user._id;
 
     res.json(user);
   } catch (err) {
-    console.log("here");
     res.status(500).send({ message: err.message });
   }
 });
@@ -68,7 +65,7 @@ router.delete("/user/:user_id", async (req, res) => {
       return res.status(404).json({ error: "No user found with this ID" });
     }
 
-    res.status(200).json({ message: "Shop deleted successfully" });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -81,11 +78,24 @@ router.post("/user/:user_id/friends/:friend_id", async (req, res) => {
 
     const friend_id = req.params.friend_id;
 
-    const friend = await User.findById(friend_id);
-
-    await User.findByIdAndUpdate(user_id, { $push: { friends: friend } });
+    await User.findByIdAndUpdate(user_id, { $push: { friends: friend_id } });
 
     res.json("Friend Added");
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+});
+
+// Delete Friend
+router.delete("/user/:user_id/friends/:friend_id", async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+
+    const friend_id = req.params.friend_id;
+
+    await User.findByIdAndUpdate(user_id, { $pull: { friends: friend_id } });
+
+    res.json("Friend Removed");
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
