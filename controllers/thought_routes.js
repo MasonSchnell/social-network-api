@@ -4,8 +4,6 @@ const Thought = require("../models/Thought");
 const User = require("../models/User");
 const { format } = require("date-fns");
 
-const { isAuthenticated, isLoggedIn } = require("./helpers");
-
 // Get All thoughts
 router.get("/thought", async (req, res) => {
   const thought = await Thought.find();
@@ -84,7 +82,6 @@ router.delete("/thoughts/:thought_id/reactions", async (req, res) => {
 router.post("/thought", async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    console.log(req.session.user_id);
     const user = await User.findById(user_id);
 
     const thoughtData = {
